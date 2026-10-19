@@ -11,7 +11,20 @@
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
 body{background:#fbf6ee;color:#2b1a1a}
-.ring{width:56px;height:56px;border-radius:50%;border:5px solid #ecd9b0;border-top-color:#6b1022;animation:spin .8s linear infinite}
+.ring{border-radius:50%;border:4px solid #ecd9b0;border-top-color:#6b1022;animation:spin .9s linear infinite}
+.ring2{border-radius:50%;border:3px solid transparent;border-bottom-color:#c9962b;animation:spin 1.3s linear infinite reverse}
+.bar{width:0;animation:bar 1.4s ease-in-out infinite}@keyframes bar{0%{width:0;margin-left:0}50%{width:100%;margin-left:0}100%{width:0;margin-left:100%}}
+.slide{opacity:0;pointer-events:none;transition:opacity 1s ease}
+.slide.on{opacity:1;pointer-events:auto}
+.slide.on .kb{animation:kb 8s ease-out forwards}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.08)}}
+.slide .c>*{opacity:0}
+.slide.on .c>*{animation:rise .8s ease both}
+.slide.on .c>*:nth-child(1){animation-delay:.25s}.slide.on .c>*:nth-child(2){animation-delay:.4s}.slide.on .c>*:nth-child(3){animation-delay:.55s}.slide.on .c>*:nth-child(4){animation-delay:.7s}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.c em{color:#fcd34d;font-style:italic}
+.prog{width:0}.prog.run{animation:pg 5.5s linear forwards}@keyframes pg{to{width:100%}}
+@media (prefers-reduced-motion:reduce){.slide.on .kb{animation:none}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .fade{animation:fade .4s ease}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 </style>
@@ -19,9 +32,11 @@ body{background:#fbf6ee;color:#2b1a1a}
 <body class="font-sans">
 
 <!-- Circle loader -->
-<div id="loader" class="fixed inset-0 z-[100] bg-cream flex flex-col items-center justify-center gap-4 transition-opacity duration-300">
-  <div class="ring"></div>
-  <p id="loaderText" class="font-serif text-xl text-maroon">Loading…</p>
+<div id="loader" class="fixed inset-0 z-[100] bg-cream flex flex-col items-center justify-center gap-5 transition-opacity duration-300">
+  <div class="relative w-20 h-20"><div class="ring absolute inset-0"></div><div class="ring2 absolute inset-3"></div><span class="absolute inset-0 flex items-center justify-center font-serif text-3xl font-bold text-maroon">V</span></div>
+  <p class="font-serif text-3xl text-maroon tracking-wide">Vastra <span class="text-gold">Silks</span></p>
+  <p id="loaderText" class="text-xs tracking-[0.25em] uppercase text-gray-500">Loading…</p>
+  <div class="w-40 h-1 bg-amber-100 rounded overflow-hidden"><div class="bar h-full bg-gold rounded"></div></div>
 </div>
 
 <!-- Nav -->
@@ -53,13 +68,15 @@ body{background:#fbf6ee;color:#2b1a1a}
 <main>
 <!-- HOME VIEW -->
 <div id="v-home" class="fade">
-  <section class="bg-gradient-to-br from-maroon via-rose-900 to-amber-700 text-white">
-    <div class="max-w-6xl mx-auto px-4 py-20 md:py-28 text-center">
-      <p class="tracking-[0.3em] text-xs text-amber-200 mb-4">HANDWOVEN · TIMELESS · ELEGANT</p>
-      <h1 class="font-serif text-5xl md:text-7xl font-bold leading-tight">Drape yourself in <span class="text-amber-300">tradition</span></h1>
-      <p class="mt-5 max-w-xl mx-auto text-amber-50/90">Authentic silk, cotton and designer sarees from master weavers across India, delivered to your door.</p>
-      <a href="#shop" class="inline-block mt-8 bg-amber-400 text-maroon font-semibold px-8 py-3 rounded-full hover:bg-amber-300 transition">Shop Collection</a>
+  <section id="slider" class="relative h-[72vh] md:h-[80vh] min-h-[480px] max-h-[780px] overflow-hidden bg-maroon select-none">
+    <div id="slides" class="absolute inset-0"></div>
+    <button onclick="nextSlide(-1)" aria-label="Previous" class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white items-center justify-center hover:bg-white hover:text-maroon transition">‹</button>
+    <button onclick="nextSlide(1)" aria-label="Next" class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white items-center justify-center hover:bg-white hover:text-maroon transition">›</button>
+    <div class="absolute bottom-6 left-0 right-0 z-10 max-w-6xl mx-auto px-6 md:px-4 flex items-center justify-between">
+      <div id="dots" class="flex gap-2"></div>
+      <span id="count" class="text-white/80 text-sm tracking-widest"></span>
     </div>
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-white/20 z-10"><div id="prog" class="prog h-full bg-amber-400"></div></div>
   </section>
 
   <section class="max-w-6xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
@@ -221,7 +238,43 @@ loading('Processing payment…',1800,()=>{$('oid').textContent='#VS'+Math.floor(
 function toast(m){const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(t._t);t._t=setTimeout(()=>t.style.opacity=0,1800)}
 
 renderShop();renderCart();authUI();
-window.addEventListener('load',()=>setTimeout(()=>{const l=$('loader');l.style.opacity=0;setTimeout(()=>l.classList.add('hidden'),300)},900));
+const S=[
+{img:'1610189012906-4c0aa9b9781e',eyebrow:'NEW ARRIVALS',title:'Colours that <em>celebrate</em> you',text:'Fresh handloom drapes in rich blues, golds and festive hues.',cat:'All',bg:'#1d3557'},
+{img:'1609748341932-f0206c09412b',eyebrow:'WEDDING EDIT',title:'Bridal reds, <em>woven</em> in gold',text:'Kanjivaram and Banarasi silks for your most special day.',cat:'Silk',bg:'#8b0a2a'},
+{img:'1617627143750-d86bc21e42bb',eyebrow:'FESTIVE SEASON',title:'Tradition with a <em>modern</em> glow',text:'Lightweight party-wear sarees made for celebrations.',cat:'Party',bg:'#a3124f'},
+{img:'1619516388835-2b60acc4049e',eyebrow:'EVERYDAY ELEGANCE',title:'Soft cotton for <em>every</em> day',text:'Breathable Chanderi, Ikat and linen sarees that are easy to care for.',cat:'Cotton',bg:'#4d5a45'},
+{img:'1679006831648-7c9ea12e5807',eyebrow:'TIMELESS CLASSICS',title:'Heritage you can <em>wear</em>',text:'Authentic weaves from Kanchipuram, Varanasi and Mysuru.',cat:'Silk',bg:'#0f4c5c'}];
+const U=id=>`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1800&q=80`;
+let si=0,stimer;
+function pick(c){filter=c;renderShop();$('shop').scrollIntoView()}
+function renderSlider(){
+$('slides').innerHTML=S.map((s,i)=>`<div class="slide" style="background:${s.bg}">
+<img src="${U(s.img)}" alt="" ${i?'loading="lazy"':''} class="kb absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
+<div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/5"></div>
+<div class="relative h-full max-w-6xl mx-auto px-6 md:px-4 flex items-center"><div class="c max-w-xl text-white">
+<p class="tracking-[0.3em] text-xs text-amber-300 mb-4">${s.eyebrow}</p>
+<h1 class="font-serif text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.05]">${s.title}</h1>
+<p class="mt-5 text-base md:text-lg text-white/85 max-w-md">${s.text}</p>
+<div class="mt-8 flex flex-wrap gap-3"><button onclick="pick('${s.cat}')" class="bg-amber-400 text-maroon font-semibold px-8 py-3 rounded-full hover:bg-amber-300 transition">Shop ${s.cat==='All'?'Collection':s.cat}</button><a href="#about" class="border border-white/60 px-8 py-3 rounded-full hover:bg-white hover:text-maroon transition">Our Story</a></div>
+</div></div></div>`).join('');
+$('dots').innerHTML=S.map((_,i)=>`<button onclick="showSlide(${i})" aria-label="Slide ${i+1}" class="dot h-2 rounded-full bg-white/50 transition-all duration-300"></button>`).join('');
+showSlide(0);
+const sl=$('slider');let x0=null;
+sl.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+sl.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>50)nextSlide(d<0?1:-1);x0=null});
+sl.addEventListener('mouseenter',()=>{clearTimeout(stimer);$('prog').style.animationPlayState='paused'});
+sl.addEventListener('mouseleave',()=>{$('prog').style.animationPlayState='running';stimer=setTimeout(()=>nextSlide(1),2500)})}
+function showSlide(i){si=(i+S.length)%S.length;
+document.querySelectorAll('.slide').forEach((el,k)=>el.classList.toggle('on',k===si));
+document.querySelectorAll('.dot').forEach((el,k)=>{el.style.width=k===si?'32px':'8px';el.classList.toggle('bg-amber-400',k===si);el.classList.toggle('bg-white/50',k!==si)});
+$('count').textContent=String(si+1).padStart(2,'0')+' / '+String(S.length).padStart(2,'0');
+const pr=$('prog');pr.classList.remove('run');void pr.offsetWidth;pr.classList.add('run');
+clearTimeout(stimer);stimer=setTimeout(()=>nextSlide(1),5500)}
+function nextSlide(d){showSlide(si+d)}
+renderSlider();
+(function(){const t0=Date.now();let done=false;const fin=()=>{if(done)return;done=true;setTimeout(()=>{const l=$('loader');l.style.opacity=0;setTimeout(()=>l.classList.add('hidden'),300)},Math.max(0,1000-(Date.now()-t0)))};
+const im=new Image();im.onload=im.onerror=fin;im.src=U(S[0].img);setTimeout(fin,3500)})();
+
 </script>
 </body>
 </html>
