@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vastra Silks – Sarees</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{serif:['"Cormorant Garamond"','Georgia','serif'],sans:['Jost','system-ui','sans-serif']},colors:{maroon:'#6b1022',gold:'#c9962b',cream:'#fbf6ee'}}}}</script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:#fbf6ee;color:#2b1a1a}
+.ring{width:56px;height:56px;border-radius:50%;border:5px solid #ecd9b0;border-top-color:#6b1022;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fade{animation:fade .4s ease}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body class="font-sans">
+
+<!-- Circle loader -->
+<div id="loader" class="fixed inset-0 z-[100] bg-cream flex flex-col items-center justify-center gap-4 transition-opacity duration-300">
+  <div class="ring"></div>
+  <p id="loaderText" class="font-serif text-xl text-maroon">Loading…</p>
+</div>
+
+<!-- Nav -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-amber-200">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="#" onclick="go('home')" class="font-serif text-2xl font-bold text-maroon tracking-wide">Vastra <span class="text-gold">Silks</span></a>
+    <nav class="hidden md:flex gap-8 text-sm font-medium">
+      <a href="#" onclick="go('home')" class="hover:text-maroon">Home</a>
+      <a href="#shop" onclick="go('home','shop')" class="hover:text-maroon">Shop</a>
+      <a href="#about" onclick="go('home','about')" class="hover:text-maroon">About</a>
+      <a href="#contact" onclick="go('home','contact')" class="hover:text-maroon">Contact</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <button id="authBtn" onclick="authClick()" class="text-sm font-medium border border-maroon text-maroon rounded-full px-4 py-1.5 hover:bg-maroon hover:text-white transition">Login</button>
+      <button onclick="toggleCart(true)" class="relative p-2" aria-label="Cart">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12zM6 6L5 3H2M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+        <span id="badge" class="absolute -top-0.5 -right-0.5 bg-maroon text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">0</span>
+      </button>
+      <button onclick="document.getElementById('mnav').classList.toggle('hidden')" class="md:hidden p-2" aria-label="Menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mnav" class="hidden md:hidden border-t border-amber-100 bg-white px-4 py-3 flex flex-col gap-3 text-sm" onclick="this.classList.add('hidden')">
+    <a href="#" onclick="go('home')">Home</a><a href="#shop" onclick="go('home','shop')">Shop</a><a href="#about" onclick="go('home','about')">About</a><a href="#contact" onclick="go('home','contact')">Contact</a>
+  </div>
+</header>
+
+<main>
+<!-- HOME VIEW -->
+<div id="v-home" class="fade">
+  <section class="bg-gradient-to-br from-maroon via-rose-900 to-amber-700 text-white">
+    <div class="max-w-6xl mx-auto px-4 py-20 md:py-28 text-center">
+      <p class="tracking-[0.3em] text-xs text-amber-200 mb-4">HANDWOVEN · TIMELESS · ELEGANT</p>
+      <h1 class="font-serif text-5xl md:text-7xl font-bold leading-tight">Drape yourself in <span class="text-amber-300">tradition</span></h1>
+      <p class="mt-5 max-w-xl mx-auto text-amber-50/90">Authentic silk, cotton and designer sarees from master weavers across India, delivered to your door.</p>
+      <a href="#shop" class="inline-block mt-8 bg-amber-400 text-maroon font-semibold px-8 py-3 rounded-full hover:bg-amber-300 transition">Shop Collection</a>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+    <div class="p-3">🚚 Free shipping over ₹5,000</div><div class="p-3">🧵 100% authentic weaves</div><div class="p-3">↩️ 7-day easy returns</div><div class="p-3">🔒 Secure payments</div>
+  </section>
+
+  <section id="shop" class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="font-serif text-4xl text-maroon text-center">Our Collection</h2>
+    <div id="filters" class="flex flex-wrap justify-center gap-2 mt-6"></div>
+    <div id="grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-8"></div>
+  </section>
+
+  <section id="about" class="bg-white py-16">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <h2 class="font-serif text-4xl text-maroon">Our Story</h2>
+      <p class="mt-4 text-gray-600 leading-relaxed">For three generations our family has worked with weavers of Kanchipuram, Varanasi and Mysuru. Every saree is hand-picked for its weave, zari and drape, so you can wear a piece of heritage on your most special days.</p>
+    </div>
+  </section>
+</div>
+
+<!-- CHECKOUT VIEW -->
+<div id="v-checkout" class="hidden max-w-6xl mx-auto px-4 py-10 fade">
+  <button onclick="go('home')" class="text-sm text-maroon mb-4">← Continue shopping</button>
+  <h2 class="font-serif text-4xl text-maroon mb-6">Billing &amp; Checkout</h2>
+  <div class="grid md:grid-cols-5 gap-8">
+    <form id="billForm" class="md:col-span-3 bg-white rounded-xl border border-amber-100 p-6 space-y-4" onsubmit="placeOrder(event)">
+      <h3 class="font-semibold text-lg">Billing details</h3>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <input id="bName" required placeholder="Full name" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon">
+        <input id="bPhone" required pattern="[0-9]{10}" placeholder="Phone (10 digits)" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon">
+      </div>
+      <input id="bEmail" type="email" required placeholder="Email" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon">
+      <textarea id="bAddr" required rows="2" placeholder="Street address" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon"></textarea>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <input required placeholder="City" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon">
+        <input required placeholder="State" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon">
+        <input required pattern="[0-9]{6}" placeholder="Pincode" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon">
+      </div>
+      <h3 class="font-semibold text-lg pt-2">Payment method</h3>
+      <div class="space-y-2 text-sm">
+        <label class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer"><input type="radio" name="pay" value="UPI" checked> UPI (GPay / PhonePe / Paytm)</label>
+        <label class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer"><input type="radio" name="pay" value="Card"> Credit / Debit card</label>
+        <label class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer"><input type="radio" name="pay" value="COD"> Cash on delivery</label>
+      </div>
+      <button class="w-full bg-maroon text-white font-semibold py-3 rounded-full hover:bg-rose-950 transition">Place Order</button>
+      <p class="text-xs text-gray-500 text-center">Demo checkout – no real payment is taken.</p>
+    </form>
+    <aside class="md:col-span-2 bg-white rounded-xl border border-amber-100 p-6 h-fit md:sticky md:top-24">
+      <h3 class="font-semibold text-lg mb-4">Order summary</h3>
+      <div id="sumItems" class="space-y-3 max-h-64 overflow-y-auto"></div>
+      <div id="sumTotals" class="border-t mt-4 pt-4 space-y-2 text-sm"></div>
+    </aside>
+  </div>
+</div>
+
+<!-- SUCCESS VIEW -->
+<div id="v-success" class="hidden max-w-xl mx-auto px-4 py-20 text-center fade">
+  <div class="w-20 h-20 mx-auto rounded-full bg-green-100 text-green-600 flex items-center justify-center text-4xl">✓</div>
+  <h2 class="font-serif text-4xl text-maroon mt-6">Thank you!</h2>
+  <p class="mt-3 text-gray-600">Your order <b id="oid"></b> has been placed. A confirmation will be sent to <span id="oemail"></span>.</p>
+  <button onclick="go('home')" class="mt-8 bg-maroon text-white px-8 py-3 rounded-full">Back to shop</button>
+</div>
+</main>
+
+<!-- Footer -->
+<footer id="contact" class="bg-maroon text-amber-50 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-12 grid sm:grid-cols-2 md:grid-cols-4 gap-8 text-sm">
+    <div><h4 class="font-serif text-2xl text-amber-300">Vastra Silks</h4><p class="mt-3 text-amber-100/80">Handwoven sarees for every occasion, since 1988.</p></div>
+    <div><h4 class="font-semibold mb-3">Shop</h4><ul class="space-y-2 text-amber-100/80"><li>Silk Sarees</li><li>Cotton Sarees</li><li>Party Wear</li><li>New Arrivals</li></ul></div>
+    <div><h4 class="font-semibold mb-3">Help</h4><ul class="space-y-2 text-amber-100/80"><li>Shipping &amp; Returns</li><li>Size &amp; Care Guide</li><li>Track Order</li><li>FAQs</li></ul></div>
+    <div><h4 class="font-semibold mb-3">Contact</h4><ul class="space-y-2 text-amber-100/80"><li>12, Silk Street, Chennai</li><li>+91 98765 43210</li><li>hello@vastrasilks.in</li></ul></div>
+  </div>
+  <div class="border-t border-white/10 text-center text-xs py-4 text-amber-100/70">© 2026 Vastra Silks. All rights reserved.</div>
+</footer>
+
+<!-- Cart drawer -->
+<div id="cartBg" onclick="toggleCart(false)" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+<aside id="cart" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white z-50 shadow-2xl translate-x-full transition-transform duration-300 flex flex-col">
+  <div class="p-4 border-b flex justify-between items-center"><h3 class="font-serif text-2xl text-maroon">Your Cart</h3><button onclick="toggleCart(false)" class="text-2xl leading-none">×</button></div>
+  <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+  <div class="p-4 border-t"><div class="flex justify-between font-semibold mb-3"><span>Subtotal</span><span id="cartSub">₹0</span></div>
+  <button onclick="checkout()" class="w-full bg-maroon text-white py-3 rounded-full font-semibold hover:bg-rose-950">Proceed to Checkout</button></div>
+</aside>
+
+<!-- Login modal -->
+<div id="login" class="hidden fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4">
+  <form onsubmit="doLogin(event)" class="bg-white rounded-2xl p-7 w-full max-w-sm space-y-4 relative">
+    <button type="button" onclick="closeLogin()" class="absolute top-3 right-4 text-2xl">×</button>
+    <h3 class="font-serif text-3xl text-maroon">Welcome back</h3>
+    <p class="text-xs bg-amber-50 border border-amber-200 rounded-lg p-2 text-amber-800">Temporary login: use <b>demo@vastra.in</b> / <b>1234</b></p>
+    <input id="lEmail" type="email" required value="demo@vastra.in" placeholder="Email" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon">
+    <input id="lPass" type="password" required value="1234" placeholder="Password" class="border rounded-lg px-3 py-2.5 w-full focus:outline-none focus:border-maroon">
+    <p id="lErr" class="text-red-600 text-sm hidden">Invalid credentials. Use the demo login above.</p>
+    <button class="w-full bg-maroon text-white py-3 rounded-full font-semibold">Login</button>
+  </form>
+</div>
+
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-5 py-2.5 rounded-full z-[70] opacity-0 pointer-events-none transition-opacity"></div>
+
+<script>
+const P=[
+{id:1,name:'Kanjivaram Bridal Silk',cat:'Silk',price:18999,c1:'#8b0a2a',c2:'#c2185b',c3:'#d4a017'},
+{id:2,name:'Banarasi Brocade',cat:'Silk',price:12499,c1:'#0f4c5c',c2:'#1b7a8c',c3:'#e0b13a'},
+{id:3,name:'Mysore Crepe Silk',cat:'Silk',price:7999,c1:'#5b2a86',c2:'#8e44ad',c3:'#f1c40f'},
+{id:4,name:'Chanderi Cotton',cat:'Cotton',price:3299,c1:'#e8b4a0',c2:'#f5d5c8',c3:'#b5651d'},
+{id:5,name:'Pochampally Ikat',cat:'Cotton',price:2799,c1:'#1d3557',c2:'#e63946',c3:'#f1faee'},
+{id:6,name:'Handloom Linen',cat:'Cotton',price:2199,c1:'#6b705c',c2:'#a5a58d',c3:'#ffe8d6'},
+{id:7,name:'Georgette Sequin Party',cat:'Party',price:4599,c1:'#10002b',c2:'#7b2cbf',c3:'#ffd60a'},
+{id:8,name:'Organza Floral Festive',cat:'Party',price:5299,c1:'#d90368',c2:'#f48fb1',c3:'#fff3b0'}];
+let cart=JSON.parse((()=>{try{return localStorage.getItem('vcart')}catch(e){return null}})()||'{}');
+let user=(()=>{try{return localStorage.getItem('vuser')}catch(e){return null}})();
+let filter='All',pending=false;
+const $=id=>document.getElementById(id), inr=n=>'₹'+n.toLocaleString('en-IN');
+const save=()=>{try{localStorage.setItem('vcart',JSON.stringify(cart));user?localStorage.setItem('vuser',user):localStorage.removeItem('vuser')}catch(e){}};
+
+function art(p){let d='';for(let i=0;i<5;i++)for(let j=0;j<6;j++)d+=`<circle cx="${25+i*38}" cy="${55+j*30}" r="${j%2?3:5}" fill="${p.c3}" opacity=".45"/>`;
+return `<svg viewBox="0 0 200 260" preserveAspectRatio="xMidYMid slice" class="w-full h-full"><defs><linearGradient id="g${p.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p.c1}"/><stop offset="1" stop-color="${p.c2}"/></linearGradient></defs><rect width="200" height="260" fill="url(#g${p.id})"/>${d}<rect width="200" height="20" fill="${p.c3}"/><rect y="240" width="200" height="20" fill="${p.c3}"/><rect x="0" y="26" width="200" height="3" fill="${p.c3}" opacity=".8"/><rect x="0" y="231" width="200" height="3" fill="${p.c3}" opacity=".8"/><rect x="160" y="20" width="40" height="220" fill="${p.c3}" opacity=".25"/></svg>`}
+
+function loading(text,ms,fn){$('loaderText').textContent=text;const l=$('loader');l.classList.remove('hidden');requestAnimationFrame(()=>l.style.opacity=1);
+setTimeout(()=>{fn&&fn();l.style.opacity=0;setTimeout(()=>l.classList.add('hidden'),300)},ms)}
+
+function renderShop(){
+$('filters').innerHTML=['All','Silk','Cotton','Party'].map(c=>`<button onclick="filter='${c}';renderShop()" class="px-5 py-1.5 rounded-full text-sm border ${c===filter?'bg-maroon text-white border-maroon':'border-amber-300 hover:bg-amber-50'}">${c}</button>`).join('');
+$('grid').innerHTML=P.filter(p=>filter==='All'||p.cat===filter).map(p=>`<div class="bg-white rounded-xl overflow-hidden border border-amber-100 hover:shadow-lg transition group">
+<div class="aspect-[3/4] overflow-hidden group-hover:scale-[1.03] transition duration-500">${art(p)}</div>
+<div class="p-3"><p class="text-xs text-gold uppercase tracking-wider">${p.cat}</p><h3 class="font-serif text-lg font-semibold leading-tight">${p.name}</h3>
+<div class="flex items-center justify-between mt-2"><span class="font-semibold text-maroon">${inr(p.price)}</span><button onclick="add(${p.id})" class="text-xs bg-maroon text-white px-3 py-1.5 rounded-full hover:bg-rose-950">Add to cart</button></div></div></div>`).join('')}
+
+function add(id){cart[id]=(cart[id]||0)+1;save();renderCart();toast('Added to cart')}
+function qty(id,d){cart[id]=(cart[id]||0)+d;if(cart[id]<=0)delete cart[id];save();renderCart();if(!$('v-checkout').classList.contains('hidden'))renderSummary()}
+function totals(){const sub=Object.entries(cart).reduce((s,[id,q])=>s+P.find(p=>p.id==id).price*q,0);const ship=sub===0||sub>=5000?0:99;const gst=Math.round(sub*.05);return{sub,ship,gst,total:sub+ship+gst}}
+function renderCart(){const n=Object.values(cart).reduce((a,b)=>a+b,0);$('badge').textContent=n;
+$('cartItems').innerHTML=n?Object.entries(cart).map(([id,q])=>{const p=P.find(x=>x.id==id);return `<div class="flex gap-3"><div class="w-16 h-20 rounded-md overflow-hidden shrink-0">${art(p)}</div><div class="flex-1 text-sm"><p class="font-medium">${p.name}</p><p class="text-maroon">${inr(p.price)}</p>
+<div class="flex items-center gap-2 mt-1"><button onclick="qty(${id},-1)" class="w-6 h-6 border rounded">−</button><span>${q}</span><button onclick="qty(${id},1)" class="w-6 h-6 border rounded">+</button><button onclick="qty(${id},-99)" class="ml-auto text-xs text-red-600">Remove</button></div></div></div>`}).join(''):'<p class="text-center text-gray-500 mt-10">Your cart is empty.</p>';
+$('cartSub').textContent=inr(totals().sub)}
+function toggleCart(o){$('cart').classList.toggle('translate-x-full',!o);$('cartBg').classList.toggle('hidden',!o)}
+
+function renderSummary(){const t=totals();
+$('sumItems').innerHTML=Object.entries(cart).map(([id,q])=>{const p=P.find(x=>x.id==id);return `<div class="flex gap-3 items-center text-sm"><div class="w-12 h-14 rounded overflow-hidden shrink-0">${art(p)}</div><span class="flex-1">${p.name} × ${q}</span><span>${inr(p.price*q)}</span></div>`}).join('');
+$('sumTotals').innerHTML=`<div class="flex justify-between"><span>Subtotal</span><span>${inr(t.sub)}</span></div><div class="flex justify-between"><span>Shipping</span><span>${t.ship?inr(t.ship):'Free'}</span></div><div class="flex justify-between"><span>GST (5%)</span><span>${inr(t.gst)}</span></div><div class="flex justify-between font-semibold text-base pt-2 border-t"><span>Total</span><span class="text-maroon">${inr(t.total)}</span></div>`}
+
+function show(v){['home','checkout','success'].forEach(x=>$('v-'+x).classList.toggle('hidden',x!==v))}
+function go(v,anchor){toggleCart(false);if(v==='home'&&!$('v-home').classList.contains('hidden')){anchor?$(anchor).scrollIntoView():window.scrollTo(0,0);return}
+loading('Loading…',500,()=>{show(v);anchor?$(anchor).scrollIntoView():window.scrollTo(0,0)})}
+function checkout(){if(!Object.keys(cart).length)return toast('Your cart is empty');toggleCart(false);if(!user){pending=true;return openLogin()}
+loading('Preparing checkout…',700,()=>{renderSummary();$('bEmail').value=user;show('checkout');window.scrollTo(0,0)})}
+
+function authUI(){$('authBtn').textContent=user?'Logout':'Login'}
+function authClick(){if(user){loading('Signing out…',600,()=>{user=null;save();authUI();toast('Logged out');show('home')})}else openLogin()}
+function openLogin(){$('lErr').classList.add('hidden');$('login').classList.remove('hidden')}
+function closeLogin(){$('login').classList.add('hidden');pending=false}
+function doLogin(e){e.preventDefault();const em=$('lEmail').value.trim(),pw=$('lPass').value;
+if(em!=='demo@vastra.in'||pw!=='1234'){$('lErr').classList.remove('hidden');return}
+$('login').classList.add('hidden');loading('Signing you in…',1000,()=>{user=em;save();authUI();toast('Logged in successfully');if(pending){pending=false;checkout()}})}
+
+function placeOrder(e){e.preventDefault();const mail=$('bEmail').value;
+loading('Processing payment…',1800,()=>{$('oid').textContent='#VS'+Math.floor(100000+Math.random()*900000);$('oemail').textContent=mail;cart={};save();renderCart();show('success');window.scrollTo(0,0)})}
+
+function toast(m){const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(t._t);t._t=setTimeout(()=>t.style.opacity=0,1800)}
+
+renderShop();renderCart();authUI();
+window.addEventListener('load',()=>setTimeout(()=>{const l=$('loader');l.style.opacity=0;setTimeout(()=>l.classList.add('hidden'),300)},900));
+</script>
+</body>
+</html>
